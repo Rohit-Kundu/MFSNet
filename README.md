@@ -15,7 +15,7 @@ Follow the directory structure as follows:
 |   +-- train
 |   |       +-- images
 |   |       +-- masks
-|   +-- val
+|   +-- test
 |   |       +-- images
 |   |       +-- masks
 +-- train.py
