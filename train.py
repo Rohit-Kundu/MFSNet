@@ -609,7 +609,7 @@ if __name__ == '__main__':
     parser.add_argument('--decay_epoch', type=int,
                         default=25, help='every n epochs decay learning rate')
     parser.add_argument('--train_path', type=str,
-                        default='./HG1000/TrainDataset', help='path to train dataset')
+                        default='train', help='path to train dataset')
     parser.add_argument('--train_save', type=str,
                         default='MFS_Res2Net_new')
     opt = parser.parse_args()
