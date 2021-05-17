@@ -2,8 +2,6 @@ import torch
 import numpy as np
 import os, argparse
 from scipy import misc
-#from lib.MFS_Res2Net import MFSNet
-#from utils.dataloader import test_dataset
 import torch.nn as nn
 import math
 import torch.utils.model_zoo as model_zoo
@@ -598,7 +596,7 @@ for i in range(test_loader.size):
         lateral_map_5, lateral_map_4, lateral_map_3, lateral_map_2, lateral_edge = model(image)
 
         res = lateral_map_2
-        # res = F.upsample(res, size=(ori_size[1],ori_size[0]), mode='bilinear', align_corners=False)
+        
         res = res.sigmoid().data.cpu().numpy().squeeze()
         lateral_edge=lateral_edge.data.cpu().numpy().squeeze()
         inv_map=lateral_map_4.max()-lateral_map_4
