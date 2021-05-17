@@ -569,25 +569,25 @@ class test_dataset:
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--testsize', type=int, default=352, help='testing size')
-parser.add_argument('--pth_path', type=str, default='./Snapshots/MFS_ISIC/MFSNet-39.pth')
+parser.add_argument('--model_path', type=str, default='./Snapshots/MFSNet/MFSNet.pth')
+parser.add_argument('--data_path', type=str, default='test', help='Directory of test images')
+parser.add_argument('--save_path', type=str, default='test/outputs', help='Directory where prediction masks will be saved.')
 
 
-data_path = '/content/drive/MyDrive/multifocus segment/mfs/ppt/ISIC2017'
-save_path = '/content/drive/MyDrive/multifocus segment/mfs/ppt/ISIC2017/proposed'
-global_path='./PH2/TestDataset/Global_guide/'
-ra1_out='./PH2/TestDataset/ra1_sigmoid/'
-ra2_out='./PH2/TestDataset/ra2/'
-e_out='./PH2/TestDataset/e1/'
-inv_out='./PH2/TestDataset/ra1_sig_rev/'
 opt = parser.parse_args()
+data_path = opt.data_path
+save_path = opt.save_path
+if not os.path.exists(save_path):
+    os.makedirs(save_path)
+
 model = MFSNet()
-model.load_state_dict(torch.load(opt.pth_path))
+model.load_state_dict(torch.load(opt.model_path))
 model.cuda()
 model.eval()
 
 os.makedirs(save_path, exist_ok=True)
-image_root = '{}/image/'.format(data_path)
-gt_root = '{}/mask/'.format(data_path)
+image_root = '{}/images/'.format(data_path)
+gt_root = '{}/masks/'.format(data_path)
 test_loader = test_dataset(image_root, opt.testsize)
 
 for i in range(test_loader.size):
@@ -607,12 +607,5 @@ for i in range(test_loader.size):
         lateral_map_3=lateral_map_3.data.cpu().numpy().squeeze()
         lateral_map_5=lateral_map_5.data.cpu().numpy().squeeze()
         res = (res - res.min()) / (res.max() - res.min() + 1e-8)
-        #imageio.imwrite(save_path+name, res)
+        
         io.imsave(save_path+name, img_as_ubyte(res))
-        #imageio.imwrite(e_out+name,lateral_edge)
-        #imageio.imwrite(ra1_out+name,lateral_map_4)
-        #imageio.imwrite(inv_out+name,inv_map)
-        #imageio.imwrite(ra2_out+name,lateral_map_3)
-        #imageio.imwrite(global_path+name,lateral_map_5)
-        #misc.imsave(save_path+name, res)
-        #io.imsave(save_path+name, res, plugin="tifffile")
