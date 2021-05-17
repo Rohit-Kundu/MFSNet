@@ -9,6 +9,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--root', type=str, default="data/", help='Directory of raw input images.')
 parser.add_argument('--destination', type=str, default="inpainted_ims/", help='Directory where the inpainted images will be saved.')
+args = parser.parse_args()
 
 root = args.root
 dst = args.destination
