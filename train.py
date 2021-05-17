@@ -3,9 +3,6 @@ from torch.autograd import Variable
 import os
 import argparse
 from datetime import datetime
-#from lib.MFS_Res2Net import MFSNet
-#from utils.dataloader import get_loader
-#from utils.utils import clip_gradient, adjust_lr, AvgMeter
 import torch.nn.functional as F
 import os
 from PIL import Image
@@ -591,8 +588,8 @@ def train(train_loader, model, optimizer, epoch):
     save_path = 'Snapshots/{}/'.format(opt.train_save)
     os.makedirs(save_path, exist_ok=True)
     if (epoch+1) % 10 == 0:
-        torch.save(model.state_dict(), save_path + 'MFSNet-%d.pth' % epoch)
-        print('[Saving Snapshot:]', save_path + 'MFSNet-%d.pth'% epoch)
+        torch.save(model.state_dict(), save_path + 'MFSNet.pth')
+        print('[Saving Snapshot:]', save_path + 'MFSNet.pth')
 
 
 if __name__ == '__main__':
@@ -612,7 +609,7 @@ if __name__ == '__main__':
     parser.add_argument('--decay_epoch', type=int,
                         default=25, help='every n epochs decay learning rate')
     parser.add_argument('--train_path', type=str,
-                        default='./train', help='path to train dataset')
+                        default='./HG1000/TrainDataset', help='path to train dataset')
     parser.add_argument('--train_save', type=str,
                         default='MFS_Res2Net_new')
     opt = parser.parse_args()
@@ -622,10 +619,6 @@ if __name__ == '__main__':
     model = MFSNet().cuda()
 
     # ---- flops and params ----
-    # from utils.utils import CalParams
-    # x = torch.randn(1, 3, 352, 352).cuda()
-    # CalParams(lib, x)
-
     params = model.parameters()
     optimizer = torch.optim.Adam(params, opt.lr)
 
@@ -640,3 +633,4 @@ if __name__ == '__main__':
     for epoch in range(1, opt.epoch):
         adjust_lr(optimizer, opt.lr, epoch, opt.decay_rate, opt.decay_epoch)
         train(train_loader, model, optimizer, epoch)
+
