@@ -28,4 +28,4 @@ Run the following to train the MFSNet network:
 
 After the training is complete, run the following to generate the predictions on the test images:
 
-`python test.py --test_path "data/test`
+`python test.py --test_path "data/test"`
