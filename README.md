@@ -38,3 +38,6 @@ Other available hyperparameters for training are as follows:
 After the training is complete, run the following to generate the predictions on the test images:
 
 `python test.py --test_path "data/test"`
+
+# Evaluating Performance
+Run `eval/main.m` using MATLAB on the ground truth images and the predicted masks, to get the evaluation measures.
