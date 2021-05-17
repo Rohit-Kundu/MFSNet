@@ -567,11 +567,6 @@ class test_dataset:
 
 
 
-
-
-
-
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--testsize', type=int, default=352, help='testing size')
 parser.add_argument('--pth_path', type=str, default='./Snapshots/MFS_ISIC/MFSNet-39.pth')
