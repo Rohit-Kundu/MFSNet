@@ -611,7 +611,7 @@ if __name__ == '__main__':
     parser.add_argument('--train_path', type=str,
                         default='train', help='path to train dataset')
     parser.add_argument('--train_save', type=str,
-                        default='MFS_Res2Net_new')
+                        default='MFSNet')
     opt = parser.parse_args()
 
     # ---- build models ----
