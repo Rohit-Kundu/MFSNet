@@ -8,7 +8,7 @@ import os
 from PIL import Image
 
 
-root = "/content/drive/MyDrive/Segmentation Ram sir/multifocus segment/mfs/ppt/inpaint/"
+root = "/content/drive/MyDrive/Segmentation/multifocus segment/mfs/ppt/inpaint/"
 for im in os.listdir(root):
     src=cv2.imread(root+im)
     print( src.shape )
