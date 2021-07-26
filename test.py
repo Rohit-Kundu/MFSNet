@@ -22,10 +22,7 @@ import torch.nn.functional as F
 from thop import profile
 from thop import clever_format
 
-"""
-lib.Res2Net_V1b
 
-"""
 class Bottle2neck(nn.Module):
     expansion = 4
 
@@ -214,10 +211,6 @@ if __name__ == '__main__':
     model = res2net50_v1b_26w_4s(pretrained=True)
     model = model.cuda(0)
     print(model(images).size())
-
-"""
-lib.MFS_Res2Net
-"""
 
 class BasicConv2d(nn.Module):
     def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, dilation=1):
@@ -421,20 +414,6 @@ class MFSNet(nn.Module):
                                       mode='bilinear')   # NOTES: Sup-4 (bs, 1, 44, 44) -> (bs, 1, 352, 352)
 
         return lateral_map_5, lateral_map_4, lateral_map_3, lateral_map_2, lateral_edge
-
-
-
-if __name__ == '__main__':
-    ras = MFSNet().cuda()
-    input_tensor = torch.randn(1, 3, 352, 352).cuda()
-
-    out = ras(input_tensor)
-    print(out[0].shape)
-
-"""
-utils.dataloader
-"""
-
 
 class Dataset(data.Dataset):
     
