@@ -13,11 +13,11 @@ Follow the directory structure as follows:
 +-- data
 |   +-- .
 |   +-- train
-|   |       +-- images
-|   |       +-- masks
+|   |   +-- images
+|   |   +-- masks
 |   +-- test
-|   |       +-- images
-|   |       +-- masks
+|   |   +-- images
+|   |   +-- masks
 +-- train.py
 +-- test.py
 ```
