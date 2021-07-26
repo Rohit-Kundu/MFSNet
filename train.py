@@ -19,16 +19,68 @@ from thop import clever_format
 
 __all__ = ['Res2Net', 'res2net50_v1b', 'res2net101_v1b', 'res2net50_v1b_26w_4s']
 
-#model_urls = {
- #   'res2net50_v1b_26w_4s': 'https://shanghuagao.oss-cn-beijing.aliyuncs.com/res2net/res2net50_v1b_26w_4s-3cf99910.pth',
- #   'res2net101_v1b_26w_4s': 'https://shanghuagao.oss-cn-beijing.aliyuncs.com/res2net/res2net101_v1b_26w_4s-0812c246.pth',
-#}
+class SkinDataset(data.Dataset):
+    def __init__(self, image_root, gt_root, trainsize):
+        self.trainsize = trainsize
+        self.images = [image_root + f for f in os.listdir(image_root) if f.endswith('.jpg') or f.endswith('.png')]
+        self.gts = [gt_root + f for f in os.listdir(gt_root) if f.endswith('.png')]
+        self.images = sorted(self.images)
+        self.gts = sorted(self.gts)
+        self.filter_files()
+        self.size = len(self.images)
+        self.img_transform = transforms.Compose([
+            transforms.Resize((self.trainsize, self.trainsize)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406],
+                                 [0.229, 0.224, 0.225])])
+        self.gt_transform = transforms.Compose([
+            transforms.Resize((self.trainsize, self.trainsize)),
+            transforms.ToTensor()])
 
-    
-"""
-lib.Res2Net_V1b
+    def __getitem__(self, index):
+        image = self.rgb_loader(self.images[index])
+        gt = self.binary_loader(self.gts[index])
+        image = self.img_transform(image)
+        gt = self.gt_transform(gt)
+        return image, gt
 
-"""
+    def filter_files(self):
+        assert len(self.images) == len(self.gts)
+        images = []
+        gts = []
+        for img_path, gt_path in zip(self.images, self.gts):
+            img = Image.open(img_path)
+            gt = Image.open(gt_path)
+            if img.size == gt.size:
+                images.append(img_path)
+                gts.append(gt_path)
+        self.images = images
+        self.gts = gts
+
+    def rgb_loader(self, path):
+        with open(path, 'rb') as f:
+            img = Image.open(f)
+            return img.convert('RGB')
+
+    def binary_loader(self, path):
+        with open(path, 'rb') as f:
+            img = Image.open(f)
+            # return img.convert('1')
+            return img.convert('L')
+
+    def resize(self, img, gt):
+        assert img.size == gt.size
+        w, h = img.size
+        if h < self.trainsize or w < self.trainsize:
+            h = max(h, self.trainsize)
+            w = max(w, self.trainsize)
+            return img.resize((w, h), Image.BILINEAR), gt.resize((w, h), Image.NEAREST)
+        else:
+            return img, gt
+
+    def __len__(self):
+        return self.size
+
 class Bottle2neck(nn.Module):
     expansion = 4
 
@@ -211,18 +263,6 @@ def res2net152_v1b_26w_4s(pretrained=False, **kwargs):
         model.load_state_dict(model_zoo.load_url(model_urls['res2net152_v1b_26w_4s']))
     return model
 
-
-if __name__ == '__main__':
-    images = torch.rand(1, 3, 224, 224).cuda(0)
-    model = res2net50_v1b_26w_4s(pretrained=True)
-    model = model.cuda(0)
-    print(model(images).size())
-
-
-"""
-utils.utils
-"""
-
 def clip_gradient(optimizer, grad_clip):
     
     for group in optimizer.param_groups:
@@ -265,11 +305,6 @@ def CalParams(model, input_tensor):
     flops, params = profile(model, inputs=(input_tensor,))
     flops, params = clever_format([flops, params], "%.3f")
     print('[Statistics Information]\nFLOPs: {}\nParams: {}'.format(flops, params))
-
-
-"""
-lib.MFS_Res2Net
-"""
 
 class BasicConv2d(nn.Module):
     def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, dilation=1):
@@ -463,23 +498,9 @@ class MFSNet(nn.Module):
 
         return lateral_map_5, lateral_map_4, lateral_map_3, lateral_map_2
 
-
-if __name__ == '__main__':
-    ras = MFSNet().cuda()
-    input_tensor = torch.randn(1, 3, 352, 352).cuda()
-
-    out = ras(input_tensor)
-    print(out[0].shape)
-
-
-"""
-utils.dataloader
-"""
-
-
 def get_loader(image_root, gt_root, batchsize, trainsize, shuffle=True, num_workers=4, pin_memory=True):
 
-    dataset = PolypDataset(image_root, gt_root, trainsize)
+    dataset = SkinDataset(image_root, gt_root, trainsize)
     data_loader = data.DataLoader(dataset=dataset,
                                   batch_size=batchsize,
                                   shuffle=shuffle,
