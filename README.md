@@ -1,6 +1,7 @@
 # MFSNet
 This repository will contain the official implementation of our paper titled "MFSNet: A Multi Focus Segmentation Network for Skin Lesion Segmentation" under peer review in Pattern Recognition, Elsevier.
 
+<!---
 # Preprocessing
 To run the script for inpainting, run the following using the command prompt:
 
@@ -41,3 +42,4 @@ After the training is complete, run the following to generate the predictions on
 
 # Evaluating Performance
 Run `eval/main.m` using MATLAB on the ground truth images and the predicted masks, to get the evaluation measures.
+--->
