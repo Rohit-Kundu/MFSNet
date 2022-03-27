@@ -1,5 +1,5 @@
 # MFSNet
-This repository contains the official implementation of our paper titled "MFSNet: A Multi Focus Segmentation Network for Skin Lesion Segmentation" under peer review in Pattern Recognition, Elsevier.
+This repository contains the official implementation of our paper titled "MFSNet: A Multi Focus Segmentation Network for Skin Lesion Segmentation" accepted in Pattern Recognition, Elsevier.
 
 # Preprocessing
 To run the script for inpainting, run the following using the command prompt:
