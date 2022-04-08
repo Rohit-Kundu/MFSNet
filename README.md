@@ -2,12 +2,12 @@
 This repository contains the official implementation of our paper titled "[MFSNet: A Multi Focus Segmentation Network for Skin Lesion Segmentation](https://doi.org/10.1016/j.patcog.2022.108673)" published in Pattern Recognition, Elsevier.  
 [[Preprint](https://arxiv.org/abs/2203.14341)]
 
-# Preprocessing
+## Preprocessing
 To run the script for inpainting, run the following using the command prompt:
 
 `python inpaint.py --root "D:/inputs/" --destination "D:/images/"`
 
-# Training the Network
+## Training the Network
 Follow the directory structure as follows:
 
 ```
@@ -40,7 +40,7 @@ After the training is complete, run the following to generate the predictions on
 
 `python test.py --test_path "data/test"`
 
-# Evaluating Performance
+## Evaluating Performance
 Run `eval/main.m` using MATLAB on the ground truth images and the predicted masks, to get the evaluation measures.
 
 # Citation
